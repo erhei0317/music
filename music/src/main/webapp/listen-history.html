@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">	
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<style>
+			*{
+			moz-user-select: -moz-none;
+			-moz-user-select: none;
+			-o-user-select:none;
+			-khtml-user-select:none;
+			-webkit-user-select:none;
+			-ms-user-select:none;
+			user-select:none;
+			}
+			@font-face {font-family: 'iconfont';
+                  src: url('font/iconfont.eot'); /* IE9*/
+                  src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+                  url('font/iconfont.woff') format('woff'), /* chrome、firefox */
+                  url('font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+                  url('font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+               }
+               
+               .iconfont{font-family:"iconfont" !important;
+                      font-style:normal;
+                      -webkit-font-smoothing: antialiased;
+                      -webkit-text-stroke-width: 0.05rem;
+                      }
+               .table{
+               		cursor: default;
+               }
+               
+                              .table{
+               		cursor: default;
+               }
+               
+               .collect{
+               	font-size: 2.5rem;
+               	position: relative;
+               	bottom:0.3rem;
+               	right: 1rem;
+               }
+               
+               .listen{
+               	font-size: 1.9rem;
+               	position: relative;
+               	bottom:0.5rem;
+               }
+               
+               .collect-active{
+               	color: #dd0000;
+               }
+               
+			
+			.collect,.listen{
+				cursor: pointer;
+			}
+			
+			.song-id{
+				display:none;
+			}
+			
+			.song-url{
+				display:none;
+			}
+			
+			.active{
+				background: #e8e8e8;
+			}
+			
+			.collect-state{
+				display: none;
+			}
+		</style>
+	</head>
+	<body ng-app="page-content" ng-controller="page-ctrl">
+		<script>
+			var pageContent=angular.module("page-content",[]);
+			pageContent.controller('page-ctrl',function($scope,$http){
+					function init(){
+						$http({
+							method:"GET",
+							url:"getListenHistory"
+						}).then(function(data){
+							index=0;
+							var result=data.data.resultMap.result;
+							if(result=='unlogin'){
+								window.parent.postMessage("login","/");
+							}
+							var histories=data.data.resultMap.histories;
+							$scope.histories=histories;
+							$scope.$apply();
+						});
+					}
+					
+					$(document).ready(function(){
+						init();
+
+					});
+					
+				});
+			
+
+		</script>
+		<div class="container">
+			<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>音乐标题</th>
+					<th>歌手</th>
+					<th>专辑</th>
+					<th>播放次数</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="history in histories">
+					<td class="song-id">{{history.songid}}</td>
+					<td class="song-url">{{history.songurl}}</td>
+					<td >{{$index<9?"0":""}}<span class="index">{{$index+1}}</span></td>
+					<td class="song-name">{{history.songname}}</td>
+					<td>{{history.singer}}</td>
+					<td>{{history.album}}</td>
+					<td>{{history.time}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<title></title>
+		<style>
+			.container{
+				max-width: 500px;
+			}
+			form>div{
+				margin-top:20px;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			function addSong(){
+					var songname=$('.song-name').val().trim();
+					if(songname==null||songname=='')
+					return; 
+					var singer=$('.singer').val().trim();
+					if(singer==null||singer=='')
+					return;
+					var album=$('.album').val().trim();
+					if(album==null||album=='')
+					return;
+					var songurl=$('.song-url').val().trim();
+					if(songurl==null||songurl=='')
+					return;
+					$.ajax({
+						type:"post",
+						url:"addSong",
+						data:{
+							songname:songname,
+							singer:singer,
+							album:album,
+							songurl:songurl
+						},
+						async:true,
+						success:function(msg){
+							var data=eval(msg);
+							if(data.resultMap.result=='success'){
+								alert("添加成功");
+								$('.song-name').val('');
+								$('.singer').val('');
+								$('.song-url').val('');
+								$('.album').val('');
+							}else{
+								alert("添加失败");
+							}
+						},
+						error:function(msg){
+							alert("添加失败");
+						}
+					});
+				}
+			
+			$(document).on('click','.add-song',function(){
+				addSong();
+			});
+		</script>
+		<div class="container">
+			<form role="form">
+				<div class="input-group">
+					<span class="input-group-addon">歌名</span>
+					<input class="form-control song-name" />
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">歌手</span>
+					<input class="form-control singer"  />
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">专辑</span>
+					<input class="form-control album" />
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon">链接</span>
+					<input class="form-control song-url"/>
+				</div>
+				<div class="form-control btn btn-default" class="add-song" onclick="addSong();">
+					添加歌曲
+				</div>
+				<div class="form-control btn btn-default" onclick="location.href='toManageSong'">
+					管理歌曲
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

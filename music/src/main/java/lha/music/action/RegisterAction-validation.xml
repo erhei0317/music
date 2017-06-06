@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>  
+     <field name="username">  
+        <field-validator type="requiredstring">  
+            <param name="trim">true</param>  
+            <message>用户名不能为空</message>  
+        </field-validator>  
+        <field-validator type="regex">  
+            <param name="expression"><![CDATA[(\w{8,16})]]></param>  
+            <message>用户名要在8-16位之间</message>  
+        </field-validator>  
+    </field>  
+    <field name="password1">  
+        <field-validator type="requiredstring">  
+            <param name="trim">true</param>  
+            <message>密码不能为空</message>  
+        </field-validator>  
+    </field>  
+	  <field name="nickname">  
+        <field-validator type="requiredstring">  
+            <param name="trim">true</param>  
+            <message>昵称不能为空</message>  
+        </field-validator>  
+        <field-validator type="regex">  
+            <param name="expression"><![CDATA[(\w{3,12})]]></param>  
+            <message>昵称要在3-12位之间</message>  
+        </field-validator>  
+    </field>  
+</validators>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+     xmlns="http://www.springframework.org/schema/beans"  
+     xmlns:p="http://www.springframework.org/schema/p"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:context="http://www.springframework.org/schema/context"  
+     xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/context  
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">   
+  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
+    destroy-method="close">
+        <!-- 指定连接数据库的驱动 -->
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <!-- 指定连接数据库的URL -->
+        <property name="jdbcUrl" value="jdbc:mysql://localhost/music?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <!-- 指定连接数据库的用户名 -->
+        <property name="user" value="root"/>
+        <!-- 指定连接数据库的密码 -->
+		<property name="password" value="123456"/>
+        <!-- 指定连接数据库连接池的最大连接数 -->
+        <property name="maxPoolSize" value="1000"/>
+        <!-- 指定连接数据库连接池的最小连接数 -->
+        <property name="minPoolSize" value="5"/>
+        <!-- 指定连接数据库连接池的初始化连接数 -->
+        <property name="initialPoolSize" value="5"/>
+        <!-- 指定连接数据库连接池的连接最大空闲时间,改时间段内不对数据库做任何操作，既断开链接 -->
+        <property name="maxIdleTime" value="15"/>
+        <property name="acquireIncrement" value="3"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <!-- 依赖注入数据源，正是上文定义的dataSource -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- mappingResources属性用来列出全部映射文件 -->
+        <property name="annotatedClasses">
+            <list>
+                <!-- 以下用来列出所有的PO映射文件 -->
+                
+               <value>lha.music.vo.User</value>
+               <value>lha.music.vo.Song</value>
+                <value>lha.music.vo.Follow</value>
+               <value>lha.music.vo.Comment</value>
+                <value>lha.music.vo.ListenHistory</value>
+               <value>lha.music.vo.SongCollection</value>
+               <value>lha.music.vo.Admin</value>
+            </list>
+        </property>
+          <!-- 定义Hibernate的SessionFactory属性 -->
+        <property name="hibernateProperties">
+             <props>
+                <!-- 指定Hibernate的连接方言 -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <!-- 配置启动应用时，是否根据Hibernate映射自动创建数据表 -->
+                  <prop key="hibernate.hbm2ddl.auto">update</prop>
+                 <prop key="hibernate.connection.useUnicode">true</prop> 
+                 <prop key="hibernate.connection.characterEncoding">utf-8</prop> 
+                 <prop key="hibernate.current_session_context_class">thread</prop> 
+           </props>
+        </property>
+    </bean>
+     <import resource="application.xml"/>
+        
+</beans> 

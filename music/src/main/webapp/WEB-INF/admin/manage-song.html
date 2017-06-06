@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/angular.min.js"></script> 
+		<title></title>
+	</head>
+	<body ng-app="page-content" ng-controller="page-ctrl">
+		<script>
+			var pageContent=angular.module('page-content',[]);
+			pageContent.controller('page-ctrl',function($scope,$http){
+				function init(){
+					$http({
+					method:"GET",
+					url:"getSongs"
+					}).then(function(data){
+						$scope.songs=data.data.resultMap.songs;
+					});
+				}
+				
+				function deleteSong(songid){
+					$http({
+					method:"POST",
+					url:"deleteSong?songid="+songid
+					}).then(function(data){
+						var songid=data.data.resultMap.songid;
+						for(var i=0;i<$scope.songs.length;i++){
+							if($scope.songs[i].songid==songid){
+								$scope.songs.splice(i,1);
+							}
+						}
+						$scope.$apply();
+					});
+					
+				}
+				
+				$(document).ready(function(){
+					init();
+				});
+				$(document).on('click','.delete',function(){
+					var songid=$(this).parent().parent().find('.song-id').text().trim();
+					deleteSong(songid);
+				});
+			});
+		</script>
+		<div class="container">
+			<ol class="breadcrumb">
+				<li><a href="toAddSong">添加歌曲</a></li>
+				<li><span>管理歌曲</span></li>
+			</ol>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>歌曲id</th>
+						<th>歌曲名</th>
+						<th>歌手</th>
+						<th>专辑</th>
+						<th>播放次数</th>
+						<th>删除</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="song in songs">
+						<td class="song-id">{{song.songid}}</td>
+						<td>{{song.songname}}</td>
+						<td>{{song.singer}}</td>
+						<td>{{song.album}}</td>
+						<td>{{song.popular}}</td>
+						<td><a class="delete">删除</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

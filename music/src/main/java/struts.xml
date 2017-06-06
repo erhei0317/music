@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.serve.static.browserCache" value="false"></constant>
+    <constant name="struts.custom.i18n.resources" value="messageResource"></constant>
+	<constant name="struts.action.excludePattern" value="/musicWebsocket"></constant>
+    <package name="default" namespace="/" extends="json-default">
+        
+        <interceptors>
+            <interceptor name="checkLogin" class="lha.music.interceptor.CheckLoginInterceptor"></interceptor>
+            
+        </interceptors>
+        
+        <global-results>
+	      <result name="unlogin">WEB-INF/admin/admin_login.html</result>
+	    </global-results>
+
+    	<action name="login" class="loginAction">
+    	    <result name="success">index.html</result>
+    	    <result name="error">login.jsp</result>
+    	    <result name="input">login.jsp</result>
+    	</action>
+    	<action name="register"  class="registerAction">
+    	    <result name="success">login.jsp</result>
+    	    <result name="error">register.jsp</result>
+    	    <result name="input">register.jsp</result>
+    	</action>
+    	<action name="loginState" class="loginStateAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+     	</action>
+     	<action name="" class="Action" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+    	 <action name="getSongs" class="getSongsAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	     <action name="listenOnce" class="listenOnceAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	     <action name="collectionSong" class="collectionSongAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="getCollectedSongs" class="getCollectedSongsAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="getListenHistory" class="getListenHistoryAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+     	 <action name="getComments" class="getCommentsAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	     <action name="postComment" class="postCommentAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	     <action name="follow" class="followAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="getFollow" class="getFollowAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="getFollowed" class="getFollowedAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	      <action name="getUserComments" class="getUserCommentsAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	      <action name="deleteComment" class="deleteCommentAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="addSong" class="addSongAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="deleteSong" class="deleteSongAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	     <action name="adminLogin" class="adminLoginAction" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="toAdmin" class="jumpAction"  method="jump">
+	       <result name="success">WEB-INF/admin/admin_login.html</result>
+   	    </action>
+   	     <action name="toAddSong" class="jumpAction"  method="jump1">
+	       <result name="success">WEB-INF/admin/add-song.html</result>
+	       <interceptor-ref name="checkLogin"></interceptor-ref>
+   	    </action>
+   	     <action name="toManageSong" class="jumpAction"  method="jump2">
+	       <result name="success">WEB-INF/admin/manage-song.html</result>
+	       <interceptor-ref name="checkLogin"></interceptor-ref>
+   	    </action>
+   	    <action name="login2" class="login2Action" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+   	    <action name="register2" class="register2Action" >
+	       <result name="success" type="json">
+	     		<param name="noCache">true</param>
+	     		<param name="includeProperties">resultMap.*</param>
+     	   </result>
+   	    </action>
+    </package>
+          
+</struts>

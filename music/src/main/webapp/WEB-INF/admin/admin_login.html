@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<title></title>
+		<style>
+			body{
+				background: #00ca79;
+			}
+
+			.login-box{
+				margin: 0 auto;
+				width: 34rem;
+				height: 24rem;
+				background: #f8f8f8;
+				border-radius: 0.5rem;
+				padding: 0px;
+				position: relative;
+			}
+			.login-box-footer{
+				width: 34rem;
+				height: 4.5rem;
+				background: #f6a11b;
+				position: absolute;
+				bottom: 0rem;
+				border-bottom-left-radius: 0.5rem;
+				border-bottom-right-radius: 0.5rem;
+			}
+			
+			.text-input-div{
+				margin: 0 auto;
+			}
+			
+			.text-input-div > input{
+				background: #e4e4e4;
+				border: none;
+				
+			}
+			.text-input-1{
+				margin-top:5rem;
+				
+			}
+			.text-input-2{
+				margin-top: 1rem;
+			}
+			
+			.btn-input-div{
+				position: relative;
+				left: 10rem;
+			}
+			.login-btn{
+				display:inline-block;
+				margin-top: 1rem;
+				background:#f6a11b;
+				color: white;
+				width: 6.5rem;
+				height: 2.8rem;
+				border-radius: 1.5rem;
+				text-align: center;
+				line-height: 2.8rem;
+				cursor:default;
+			}
+			
+			.login-btn:hover{
+				
+				background: #f6da1b;
+			}
+			
+			.inf-head{
+				margin-top: 10rem;
+				margin-bottom: 1rem;
+				width: 100%;
+				text-align: center;
+				font-size:2.5rem;
+				color: white;
+			}
+			
+			.alert-txt{
+				color:#f6a11b;
+				font-size: 1.2rem;
+			}
+		</style>
+		<script>
+			$(document).ready(function(){
+				$('.login-btn').click(function(){
+					var adminName=$('#admin-name').val();
+					var adminPwd=$('#admin-pwd').val();
+					if(adminName==null||adminName==""){
+						$('#alert-txt').html('账户名不能为空');
+						return;
+					}
+					if(adminPwd==null||adminPwd==""){
+						$('#alert-txt').html('密码不能为空');
+						return;
+					}
+					$.ajax({
+						type:"post",
+						url:"adminLogin",
+						async:true,
+						dataType:'json',
+						data:{
+							adminName:adminName,
+							adminPwd:adminPwd
+						},
+						success:function(msg){
+							var data=eval(msg);
+							var result=data['resultMap']['result'];
+							if(result=='success'){
+								location.href="toAddSong";
+							}
+							$('#alert-txt').html('账户名或密码错误');
+						},
+						error:function(){
+							alert('网络连接失败');
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body> 
+		<div class="container">
+			<div class="inf-head">管理员登录</div>
+			<div class="login-box">
+				<form role="form" >
+					<div class="input-group text-input-div">
+						<input type="text" class="form-control text-input-1" placeholder="输入管理员账户" style="border-radius: 17px;" id="admin-name"/>
+					</div>
+					<div class="input-group text-input-div">
+						<input type="password" class="form-control text-input-2" placeholder="输入管理员密码" style="border-radius: 17px;" id="admin-pwd"/>
+					</div>
+					<div class="input-group btn-input-div">
+						<span class="alert-txt"><span id="alert-txt">密码可参考数据库</span>&nbsp;|&nbsp;&nbsp;</span>
+						<div class="login-btn">Login</div>
+					</div>
+				</form>
+				<div class="login-box-footer"></div>
+			</div>
+		</div>
+	</body>
+</html>

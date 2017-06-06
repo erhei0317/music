@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">	
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<style>
+			*{
+			moz-user-select: -moz-none;
+			-moz-user-select: none;
+			-o-user-select:none;
+			-khtml-user-select:none;
+			-webkit-user-select:none;
+			-ms-user-select:none;
+			user-select:none;
+			}
+			@font-face {font-family: 'iconfont';
+                  src: url('font/iconfont.eot'); /* IE9*/
+                  src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+                  url('font/iconfont.woff') format('woff'), /* chrome、firefox */
+                  url('font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+                  url('font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+               }
+               
+               .iconfont{font-family:"iconfont" !important;
+                      font-style:normal;
+                      -webkit-font-smoothing: antialiased;
+                      -webkit-text-stroke-width: 0.05rem;
+                      }
+               .table{
+               		cursor: default;
+               }
+               
+                              .table{
+               		cursor: default;
+               }
+               
+
+
+			
+			.comment-id{
+				display:none;
+			}
+			
+
+			.active{
+				background: #e8e8e8;
+			}
+			
+
+			
+			.delete{
+				font-size: 2rem;
+				cursor: pointer;
+			}
+			
+			.delete:hover{
+				color: #aaa;
+			}
+		</style>
+	</head>
+	<body ng-app="page-content" ng-controller="page-ctrl">
+		<script>
+			var pageContent=angular.module("page-content",[]);
+			pageContent.controller('page-ctrl',function($scope,$http){
+					function init(){
+						$http({
+							method:"GET",
+							url:"getUserComments"
+						}).then(function(data){
+							var result=data.data.resultMap.result;
+							if(result=='unlogin'){
+								window.parent.postMessage("login","/");
+							}
+							var userComments=data.data.resultMap.userComments;
+							$scope.userComments=userComments;
+						});
+					}
+					
+					var deleteComment=function(commentId){
+						$http({
+							url:'deleteComment?commentId='+commentId
+						}).then(function(data){
+							var _commentId=data.data.resultMap.commentId;
+							var _userComments=$scope.userComments;
+							for(var i=0;i<_userComments.length;i++){ 
+								if(_userComments[i].commentId==_commentId){
+									$scope.userComments.splice(i,1); 
+								}
+							}
+							$scope.$apply();
+						});
+					}
+					
+					$(document).ready(function(){
+						init();
+					});
+					
+					$(document).on('click','.delete',function(){
+							var commentId=$(this).parent().parent().find('.comment-id').text();
+							$(this).attr('disabled','disabled');
+							deleteComment(commentId);
+					});
+				});
+			
+
+		</script>
+		<div class="container">
+			<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>音乐标题</th>
+					<th>评论时间</th>
+					<th>评论内容</th>
+					<th>删除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="userComment in userComments">
+					<td class="comment-id">{{userComment.commentId}}</td>
+					<td >{{$index<9?"0":""}}<span class="index">{{$index+1}}</span></td>
+					<td class="song-name-inf" data-toggle="tooltip" title="{{userComment.songname}}">{{userComment.songnameInf}}</td>
+					<td>{{userComment.commentTime}}</td>
+					<td class="commentInf" data-toggle="tooltip" title="{{userComment.commentContent}}">{{userComment.commentInf}}</td>
+					<td><span class="iconfont delete">&#xe609;</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</body>
+</html>

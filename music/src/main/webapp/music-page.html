@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">	
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<style>
+			*{
+			moz-user-select: -moz-none;
+			-moz-user-select: none;
+			-o-user-select:none;
+			-khtml-user-select:none;
+			-webkit-user-select:none;
+			-ms-user-select:none;
+			user-select:none;
+			}
+			@font-face {font-family: 'iconfont';
+                  src: url('font/iconfont.eot'); /* IE9*/
+                  src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+                  url('font/iconfont.woff') format('woff'), /* chrome、firefox */
+                  url('font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+                  url('font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+               }
+               
+               .iconfont{font-family:"iconfont" !important;
+                      font-style:normal;
+                      -webkit-font-smoothing: antialiased;
+                      -webkit-text-stroke-width: 0.05rem;
+                      }
+               .table{
+               		cursor: default;
+               }
+               
+               .collect{
+               	font-size: 2.5rem;
+               	position: relative;
+               	bottom:0.3rem;
+               	right: 1rem;
+               }
+               
+               .listen{
+               	font-size: 1.9rem;
+               	position: relative;
+               	bottom:0.5rem;
+               }
+               
+               .collect-active{
+               	color: #dd0000;
+               }
+               
+               			
+			.cir-photo{
+				margin-top: 15px;
+				width: 100%;
+				height: 230px;
+				text-align: center;
+				position: relative;
+				
+			}
+			
+			.cir-pic-left{
+				position: absolute;
+				left: 0px;
+				bottom: 0px;
+				z-index: -1;
+			}
+			
+			.cir-pic-right{
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+				z-index: -1;
+			}
+			
+			.mask{
+				width: 100%;
+				height: 200px;
+				position: absolute;
+				bottom: 0px;
+				background: rgba(0,0,0,0.5);
+				z-index: -1;
+			}
+			
+			.turn-left{
+				float: left;
+				line-height: 260px;
+				font-size: 2rem;
+				color: #bbb;
+				margin-left: 15px;
+				cursor: pointer;
+			}
+			
+			.turn-right{
+				float: right;
+				line-height: 260px;
+				font-size: 2rem;
+				color: #bbb;
+				margin-right:15px;
+				cursor: pointer;
+			}
+			
+			.cir-li{
+				text-align: center;
+				height: 3rem;
+				line-height: 3rem;
+				font-size: 1.8rem;
+				color:#bbb;
+			}
+			
+			.cir-li-l{
+				margin-left: 3px;
+				margin-right: 3px;
+				-webkit-text-stroke-width: 0rem;
+				cursor: pointer;
+			}
+			
+			.cir-li-active{
+				color: #DD0000;
+				
+			}
+			
+			.turn-left:hover{
+				color: #EEEEEE;
+			}
+			.turn-right:hover{
+				color: #EEEEEE;
+			}
+			
+			.music-page-head{
+				width: 100%;
+				height: 4rem;
+				line-height: 4rem;
+				font-size: 2rem;
+				font-family: "微软雅黑";
+				border-bottom: 1px solid #c3c3c;
+			}
+			
+			.collect,.listen{
+				cursor: pointer;
+			}
+			
+			.song-id{
+				display:none;
+			}
+			
+			.song-url{
+				display:none;
+			}
+			
+			.active{
+				background: #e8e8e8;
+			}
+			
+			.collect-state{
+				display: none;
+			}
+		</style>
+	</head>
+	<body ng-app="page-content" ng-controller="page-ctrl">
+			<script>
+				var playing=false;
+				var cirImgs=['img/09hujI6_LSJD6DWK02qXwQ==-18964376555989719.jpg','img/nSQsp9psR0jEcF6d01aImA==-18645518185735801.jpg','img/PSwMP1uCVZGhRul03eo9lg==-18961078021114875.jpg','img/vqd-bod6GKnu2hdNomLelA==-18527870441550017.jpg'];
+				var cirLis=['#cir-li-0','#cir-li-1','#cir-li-2','#cir-li-3'];
+				var nowSelect=1;
+				var index=0;
+				var pageContent=angular.module("page-content",[]);
+				function listenOnce(data){
+					$.ajax({
+						type:"post",
+						url:"listenOnce",
+						async:true,
+						data:{
+							songId:data.songId
+						},
+						success:function(msg){
+							
+						}
+					});
+				}
+				function collectionSong(data){
+					$.ajax({
+						type:"post",
+						url:"collectionSong",
+						async:true,
+						data:{
+							songId:data.songId
+						},
+						success:function(msg){
+							var resultMap=eval(msg).resultMap;
+							var result=resultMap.result;
+							if(result=='unlogin'){
+								window.parent.postMessage("login","/");
+							}
+						}
+					});
+				}
+				pageContent.directive("myAddindex",function($index){
+					++index;
+					if(index<10){
+						var i="0"+index;
+						console.warn(i);
+						return {
+							template:$index
+						}
+					}
+				});
+				pageContent.controller('page-ctrl',function($scope,$http){
+					function init(){
+						$http({
+							method:"GET",
+							url:"getSongs"
+						}).then(function(data){
+							index=0;
+							var songs=data.data.resultMap.songs;
+							$scope.songs=songs;
+							$scope.$apply();
+						});
+					}
+					circleImgs=function(){
+						if(nowSelect==3)
+							nowSelect=0;
+						else
+							nowSelect++;
+						var nextSelect=(nowSelect+1)%4;
+						var preSelect=(nowSelect-1)%4;
+						if(nowSelect==0){
+							preSelect=3;
+						}
+						$('.cir-pic-center').attr('src',cirImgs[nowSelect]);
+						$('.cir-pic-left').attr('src',cirImgs[preSelect]);
+						$('.cir-pic-right').attr('src',cirImgs[nextSelect]);
+						$('.cir-li-l').removeClass('cir-li-active');
+						$(cirLis[nowSelect]).addClass('cir-li-active');
+					};
+					
+					circleImgsInverse=function(){
+						if(nowSelect==0)
+							nowSelect=3;
+						else
+							nowSelect--;
+						var nextSelect=(nowSelect+1)%4;
+						var preSelect=(nowSelect-1)%4;
+						if(nowSelect==0){
+							preSelect=3;
+						}
+						$('.cir-pic-center').attr('src',cirImgs[nowSelect]);
+						$('.cir-pic-left').attr('src',cirImgs[preSelect]);
+						$('.cir-pic-right').attr('src',cirImgs[nextSelect]);
+						$('.cir-li-l').removeClass('cir-li-active');
+						$(cirLis[nowSelect]).addClass('cir-li-active');
+					};
+					
+					selectCircle=function(index){
+						nowSelect=index;
+						var nextSelect=(nowSelect+1)%4;
+						var preSelect=(nowSelect-1)%4;
+						if(nowSelect==0){
+							preSelect=3;
+						}
+						$('.cir-pic-center').attr('src',cirImgs[nowSelect]);
+						$('.cir-pic-left').attr('src',cirImgs[preSelect]);
+						$('.cir-pic-right').attr('src',cirImgs[nextSelect]);
+						$('.cir-li-l').removeClass('cir-li-active');
+						$(cirLis[nowSelect]).addClass('cir-li-active');
+					};
+		
+					window.addEventListener('message',function(e){
+		  				if(e.source!=window.parent)
+		  					return;
+		                console.warn('dd');
+		            },false);
+					$(document).ready(function(){
+						init();
+						var interval=window.setInterval("circleImgs()",2000);
+						var nextSelect=(nowSelect+1)%4;
+						var preSelect=(nowSelect-1)%4;
+						$('.cir-pic-center').attr('src',cirImgs[nowSelect]);
+						$('.cir-pic-left').attr('src',cirImgs[preSelect]);
+						$('.cir-pic-right').attr('src',cirImgs[nextSelect]);
+		
+						$('.turn-left').click(function(){
+							circleImgsInverse();
+						});
+						
+						$('.turn-left').hover(function(){
+							window.clearInterval(interval);
+						});
+						
+						$('.turn-left').mouseleave(function(){
+							interval=window.setInterval("circleImgs()",2000);
+						});
+						$('.turn-right').click(function(){
+							circleImgs();
+						});
+						$('.turn-right').hover(function(){
+							window.clearInterval(interval);
+						});
+						
+						$('.turn-right').mouseleave(function(){
+							interval=window.setInterval("circleImgs()",2000);
+						});
+						
+						$('.cir-li-l').hover(function(){
+							window.clearInterval(interval);
+							var id=$(this).attr('id');
+							switch(id){
+								case 'cir-li-0':selectCircle(0);break;
+								case 'cir-li-1':selectCircle(1);break;
+								case 'cir-li-2':selectCircle(2);break;
+								case 'cir-li-3':selectCircle(3);break;
+							}
+						});
+						
+						$('.cir-li-l').mouseleave(function(){
+							interval=window.setInterval("circleImgs()",2000);
+						});
+					});
+				});
+			
+			$(document).on('dblclick','.listen',function(){
+				var playingSongName=$(this).parent().parent().find('.song-name').text();
+				var playingSongUrl=$(this).parent().parent().find('.song-url').text();
+				var playingSongId=$(this).parent().parent().find('.song-id').text();
+				window.sessionStorage.setItem("playingSongName",playingSongName);
+				window.sessionStorage.setItem("playingSongUrl",playingSongUrl);
+				window.sessionStorage.setItem("playingSongId",playingSongId);
+				window.parent.postMessage("play","/");
+				$(".active").removeClass("active");
+				$(this).parent().parent().addClass("active");
+				listenOnce({'songId':playingSongId}); 
+			});
+			
+			$(document).on('click','.collect',function(){
+				var playingSongId=$(this).parent().parent().find('.song-id').text();
+				collectionSong({'songId':playingSongId});
+				if($(this).find('.collect-state').text()=='yes'){
+					$(this).html('<span class="collect-state">no</span>&#xe6c1;');
+				}else{
+					$(this).html('<span class="collect-state">yes</span><span class="cir-li-active">&#xe6c0;</span>');
+				}
+			});
+		</script>
+		<div class="cir-photo">
+						<img  height="230px" class="cir-pic-center"/>
+						<img  class="cir-pic-left" height="200px"/>
+						<img  class="cir-pic-right" height="200px"/>
+						<span class="iconfont turn-left">&#xe605;</span>
+						<span class="iconfont turn-right">&#xe607;</span>
+						<div class="mask"></div>
+					</div>
+					<div class="cir-li">
+						<span class="iconfont cir-li-l" id="cir-li-0">&#xe608;</span>
+						<span class="iconfont cir-li-l cir-li-active" id="cir-li-1">&#xe608;</span>
+						<span class="iconfont cir-li-l" id="cir-li-2">&#xe608;</span>
+						<span class="iconfont cir-li-l" id="cir-li-3">&#xe608;</span>
+		</div>
+		<p class="music-page-head">推荐歌单</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>操作</th>
+					<th>音乐标题</th>
+					<th>歌手</th>
+					<th>专辑</th>
+					<th>热度</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="song in songs">
+					<td class="song-id">{{song.songid}}</td>
+					<td class="song-url">{{song.songurl}}</td>
+					<td>{{$index<9?"0"+($index+1):$index+1}}</td>
+					<td><span class="iconfont collect"><span class="collect-state">{{song.collected}}</span>{{song.collected=='yes'?'':'&#xe6c1;'}}<span class="cir-li-active">{{song.collected=='yes'?'&#xe6c0;':''}}</span></span><span class="iconfont listen">&#xe641;</span></td>
+					<td class="song-name">{{song.songname}}</td>
+					<td>{{song.singer}}</td>
+					<td>{{song.album}}</td>
+					<td>{{song.popular}}</td>	
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>
