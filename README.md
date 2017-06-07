@@ -8,6 +8,8 @@
 后端：java,struts2,hibernate4,spring4,webscoket
 图标：阿里巴巴图标库，bootstrap自带图标
 
+### 项目文件结构:
+![image](https://github.com/1471880107/pic/blob/master/music_4.png)
 
 ### 用例图:
 ![image](https://github.com/1471880107/pic/blob/master/music_1.png)
