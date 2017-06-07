@@ -3,5 +3,6 @@
 
 ### 主要的技术栈:
 前端：html5,css3,javascript,jquery,bootstrap,angularJs  
-后端:java,ssh2框架,webscoket
+后端:java,struts2,hibernate4,spring4,webscoket
+
 
