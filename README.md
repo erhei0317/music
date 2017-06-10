@@ -17,3 +17,23 @@
 
 ### 数据库类图：
 ![image](https://github.com/1471880107/pic/blob/master/music_3.jpg)
+
+
+### 部分功能界面展示：
+1.首页
+![image](https://github.com/1471880107/pic/blob/master/music_5.png)  
+
+2.登录和注册
+![image](https://github.com/1471880107/pic/blob/master/music_6.gif)  
+
+3.点击听歌并且评论
+![image](https://github.com/1471880107/pic/blob/master/music_7.gif)  
+
+4.关注其他用户
+![image](https://github.com/1471880107/pic/blob/master/music_8.gif)  
+
+5.查看听歌记录
+![image](https://github.com/1471880107/pic/blob/master/music_9.png)  
+
+6.管理评论
+![image](https://github.com/1471880107/pic/blob/master/music_10.png)  
